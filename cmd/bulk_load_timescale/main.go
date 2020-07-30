@@ -173,8 +173,7 @@ func (l *TimescaleBulkLoad) RunProcess(i int, waitGroup *sync.WaitGroup, telemet
 	if bulk_load.Runner.DoLoad {
 		//# Example DSN
 		//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-		dsn := fmt.Sprintf("host=%s port=%d user=%s password=password database=benchmark_db", "localhost", uint16(5432), l.psUser)
-		fmt.Println("*****", dsn)
+		dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s database=benchmark_db", "localhost", uint16(5432), l.psUser, l.psPassword)
 		config, err := pgx.ParseConfig(dsn)
 		if err != nil {
 			log.Fatal(err)
@@ -690,9 +689,10 @@ var iotCreateIndexSql = []string{
 func (l *TimescaleBulkLoad) createDatabase(daemon_url string) {
 	//# Example DSN
 	//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=password", "localhost", uint16(5432), l.psUser)
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s", "localhost", uint16(5432), l.psUser, l.psPassword)
 	fmt.Println("*****", dsn)
 	config, err := pgx.ParseConfig(dsn)
+	fmt.Println(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -710,7 +710,7 @@ func (l *TimescaleBulkLoad) createDatabase(daemon_url string) {
 
 	//# Example DSN
 	//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-	dsn = fmt.Sprintf("host=%s port=%d user=%s password=password database=benchmark_db", "localhost", uint16(5432), l.psUser)
+	dsn = fmt.Sprintf("host=%s port=%d user=%s password=%s database=benchmark_db", "localhost", uint16(5432), l.psUser, l.psPassword)
 	fmt.Println("***** 2", dsn)
 	config, err = pgx.ParseConfig(dsn)
 	if err != nil {
