@@ -107,7 +107,10 @@ func (b *TimescaleQueryBenchmarker) RunProcess(i int, workersGroup *sync.WaitGro
 	if b.doQueries {
 		//# Example DSN
 		//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-		dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s database=%s", b.hostPort[0], uint16(b.port), b.psUser, b.psPassword, DatabaseName)
+		dsn := fmt.Sprintf("host=%s port=%d user=%s database=%s", b.hostPort[0], uint16(b.port), b.psUser, DatabaseName)
+		if len(b.psPassword) > 0 {
+			dsn = fmt.Sprintf("%s password=%s", dsn, b.psPassword)
+		}
 		fmt.Println("***** qyuery", dsn)
 		config, err := pgx.ParseConfig(dsn)
 		if err != nil {

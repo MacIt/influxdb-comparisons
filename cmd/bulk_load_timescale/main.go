@@ -173,7 +173,10 @@ func (l *TimescaleBulkLoad) RunProcess(i int, waitGroup *sync.WaitGroup, telemet
 	if bulk_load.Runner.DoLoad {
 		//# Example DSN
 		//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-		dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s database=benchmark_db", "localhost", uint16(5432), l.psUser, l.psPassword)
+		dsn := fmt.Sprintf("host=%s port=%d user=%s database=benchmark_db", "localhost", uint16(5432), l.psUser)
+		if len(l.psPassword) > 0 {
+			dsn = fmt.Sprintf("%s password=%s", dsn, l.psPassword)
+		}
 		config, err := pgx.ParseConfig(dsn)
 		if err != nil {
 			log.Fatal(err)
@@ -689,10 +692,12 @@ var iotCreateIndexSql = []string{
 func (l *TimescaleBulkLoad) createDatabase(daemon_url string) {
 	//# Example DSN
 	//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s", "localhost", uint16(5432), l.psUser, l.psPassword)
+	dsn := fmt.Sprintf("host=%s port=%d user=%s", "localhost", uint16(5432), l.psUser)
+	if len(l.psPassword) > 0 {
+		dsn = fmt.Sprintf("%s password=%s", dsn, l.psPassword)
+	}
 	fmt.Println("*****", dsn)
 	config, err := pgx.ParseConfig(dsn)
-	fmt.Println(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -700,7 +705,6 @@ func (l *TimescaleBulkLoad) createDatabase(daemon_url string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	_, err = conn.Exec(context.Background(), createDatabaseSql)
 
 	conn.Close(context.Background())
@@ -710,7 +714,10 @@ func (l *TimescaleBulkLoad) createDatabase(daemon_url string) {
 
 	//# Example DSN
 	//user=jack password=secret host=pg.example.com port=5432 dbname=mydb sslmode=verify-ca
-	dsn = fmt.Sprintf("host=%s port=%d user=%s password=%s database=benchmark_db", "localhost", uint16(5432), l.psUser, l.psPassword)
+	dsn = fmt.Sprintf("host=%s port=%d user=%s database=benchmark_db", "localhost", uint16(5432), l.psUser)
+	if len(l.psPassword) > 0 {
+		dsn = fmt.Sprintf("%s password=%s", dsn, l.psPassword)
+	}
 	fmt.Println("***** 2", dsn)
 	config, err = pgx.ParseConfig(dsn)
 	if err != nil {
